@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Museu Virtual da História da Computação</title>
+  <style>
+    :root {
+      --bg: #07111f;
+      --bg-soft: #0d1b2a;
+      --card: rgba(255, 255, 255, 0.08);
+      --line: rgba(255, 255, 255, 0.14);
+      --text: #eaf2ff;
+      --muted: #b8c7e0;
+      --accent: #4cc9f0;
+      --accent-2: #90e0ef;
+      --highlight: #72efdd;
+      --shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
+      --radius: 22px;
+      --max: 1180px;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(76, 201, 240, 0.18), transparent 28%),
+        radial-gradient(circle at bottom right, rgba(114, 239, 221, 0.14), transparent 24%),
+        linear-gradient(135deg, #040b14, #07111f 35%, #0d1b2a 100%);
+      color: var(--text);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .container {
+      width: min(92%, var(--max));
+      margin: 0 auto;
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      backdrop-filter: blur(12px);
+      background: rgba(4, 11, 20, 0.72);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 0;
+      gap: 16px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 700;
+      letter-spacing: 0.4px;
+    }
+
+    .brand-badge {
+      width: 42px;
+      height: 42px;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(135deg, var(--accent), var(--highlight));
+      color: #052033;
+      font-weight: 900;
+      box-shadow: var(--shadow);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .nav-links a:hover {
+      color: var(--text);
+    }
+
+    .hero {
+      padding: 92px 0 70px;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 34px;
+      align-items: center;
+    }
+
+    .tag {
+      display: inline-block;
+      padding: 8px 14px;
+      border: 1px solid rgba(114, 239, 221, 0.22);
+      background: rgba(114, 239, 221, 0.08);
+      border-radius: 999px;
+      color: var(--accent-2);
+      font-size: 0.9rem;
+      margin-bottom: 18px;
+    }
+
+    .hero h1 {
+      font-size: clamp(2.2rem, 5vw, 4.3rem);
+      line-height: 1.08;
+      margin-bottom: 18px;
+    }
+
+    .hero p {
+      color: var(--muted);
+      font-size: 1.06rem;
+      max-width: 720px;
+      margin-bottom: 28px;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      margin-bottom: 26px;
+    }
+
+    .btn {
+      padding: 14px 20px;
+      border-radius: 14px;
+      font-weight: 700;
+      transition: 0.25s ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent), var(--highlight));
+      color: #062031;
+      box-shadow: var(--shadow);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      filter: brightness(1.04);
+    }
+
+    .btn-secondary {
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.04);
+      color: var(--text);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .hero-meta {
+      display: flex;
+      gap: 22px;
+      flex-wrap: wrap;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .hero-card {
+      background: linear-gradient(180deg, rgba(255,255,255,0.09), rgba(255,255,255,0.04));
+      border: 1px solid var(--line);
+      border-radius: 28px;
+      padding: 28px;
+      box-shadow: var(--shadow);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-card::before {
+      content: "";
+      position: absolute;
+      inset: auto -40px -40px auto;
+      width: 180px;
+      height: 180px;
+      background: radial-gradient(circle, rgba(76, 201, 240, 0.34), transparent 68%);
+    }
+
+    .hero-card h3 {
+      margin-bottom: 14px;
+      font-size: 1.2rem;
+    }
+
+    .hero-card ul {
+      list-style: none;
+      display: grid;
+      gap: 12px;
+      color: var(--muted);
+    }
+
+    .hero-card li {
+      padding: 12px 14px;
+      background: rgba(255,255,255,0.04);
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    section {
+      padding: 30px 0 70px;
+    }
+
+    .section-title {
+      font-size: clamp(1.6rem, 3vw, 2.4rem);
+      margin-bottom: 12px;
+    }
+
+    .section-subtitle {
+      color: var(--muted);
+      max-width: 760px;
+      margin-bottom: 30px;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 24px;
+      box-shadow: var(--shadow);
+    }
+
+    .card h3 {
+      margin-bottom: 10px;
+      font-size: 1.14rem;
+    }
+
+    .card p,
+    .card li {
+      color: var(--muted);
+    }
+
+    .card ul {
+      padding-left: 18px;
+      display: grid;
+      gap: 8px;
+    }
+
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    .timeline {
+      display: grid;
+      gap: 16px;
+    }
+
+    .timeline-item {
+      padding: 18px 20px;
+      border-radius: 18px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.05);
+    }
+
+    .timeline-item strong {
+      display: inline-block;
+      margin-bottom: 6px;
+      color: var(--accent-2);
+    }
+
+    .highlight-box {
+      background: linear-gradient(135deg, rgba(76, 201, 240, 0.12), rgba(114, 239, 221, 0.08));
+      border: 1px solid rgba(114, 239, 221, 0.18);
+      border-radius: var(--radius);
+      padding: 24px;
+    }
+
+    footer {
+      padding: 28px 0 42px;
+      color: var(--muted);
+      border-top: 1px solid rgba(255,255,255,0.08);
+      margin-top: 24px;
+    }
+
+    .footer-box {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    @media (max-width: 980px) {
+      .hero-grid,
+      .cards,
+      .two-col {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .hero {
+        padding-top: 70px;
+      }
+
+      .nav {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .nav-links {
+        gap: 12px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container nav">
+      <div class="brand">
+        <div class="brand-badge">MV</div>
+        <span>Museu Virtual da História da Computação</span>
+      </div>
+      <nav class="nav-links">
+        <a href="#sobre">Sobre</a>
+        <a href="#objetivos">Objetivos</a>
+        <a href="#tecnologias">Tecnologias</a>
+        <a href="#cronograma">Cronograma</a>
+        <a href="#contato">Equipe</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container hero-grid">
+        <div>
+          <span class="tag">Projeto Acadêmico • Análise e Projeto de Sistemas • 2026.1</span>
+          <h1>Explore a evolução da computação em um museu virtual 3D acessível pela web.</h1>
+          <p>
+            O projeto propõe o desenvolvimento de uma experiência interativa em Unity com exportação WebGL,
+            permitindo que estudantes e visitantes naveguem por um ambiente tridimensional, conheçam marcos históricos
+            da computação e interajam com exposições informativas de forma simples, educativa e imersiva.
+          </p>
+          <div class="hero-actions">
+            <a href="#sobre" class="btn btn-primary">Conhecer o projeto</a>
+            <a href="#cronograma" class="btn btn-secondary">Ver planejamento</a>
+          </div>
+          <div class="hero-meta">
+            <span><strong>Alunos:</strong> Felipe Haiashida Carvalho e Fernando de Freitas</span>
+            <span><strong>Plataforma:</strong> Unity WebGL</span>
+            <span><strong>Foco:</strong> Educação, tecnologia e acessibilidade</span>
+          </div>
+        </div>
+
+        <aside class="hero-card">
+          <h3>Visão rápida do sistema</h3>
+          <ul>
+            <li><strong>Navegação 3D:</strong> exploração em primeira ou terceira pessoa com teclado e mouse.</li>
+            <li><strong>Interação educativa:</strong> painéis com informações históricas sobre máquinas e marcos da computação.</li>
+            <li><strong>Acesso facilitado:</strong> execução direta no navegador, sem instalação local.</li>
+            <li><strong>Publicação online:</strong> estrutura pensada para hospedagem em páginas estáticas.</li>
+          </ul>
+        </aside>
+      </div>
+    </section>
+
+    <section id="sobre">
+      <div class="container">
+        <h2 class="section-title">Sobre o projeto</h2>
+        <p class="section-subtitle">
+          O Museu Virtual da História da Computação busca transformar o estudo de conteúdos históricos em uma experiência
+          interativa, visual e envolvente. Em vez de limitar a aprendizagem a textos estáticos, a proposta cria um espaço
+          digital navegável, no qual o usuário percorre o ambiente, observa objetos históricos e acessa conteúdos explicativos
+          contextualizados.
+        </p>
+        <div class="cards">
+          <article class="card">
+            <h3>Problema identificado</h3>
+            <p>
+              Abordagens tradicionais para o ensino da história da computação podem apresentar baixa atratividade para parte do público,
+              especialmente quando restritas a leitura expositiva e imagens estáticas.
+            </p>
+          </article>
+          <article class="card">
+            <h3>Solução proposta</h3>
+            <p>
+              Desenvolver um ambiente 3D interativo, executado na web, que permita ao visitante aprender no seu próprio ritmo,
+              combinando exploração espacial, interface amigável e conteúdo educativo.
+            </p>
+          </article>
+          <article class="card">
+            <h3>Diferencial</h3>
+            <p>
+              Unir imersão, acessibilidade e ampla distribuição digital em uma única plataforma, aproveitando os recursos do Unity WebGL
+              para alcançar qualquer usuário com navegador moderno.
+            </p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="objetivos">
+      <div class="container">
+        <h2 class="section-title">Objetivos do sistema</h2>
+        <p class="section-subtitle">
+          O projeto foi estruturado para equilibrar requisitos técnicos, usabilidade e valor educacional.
+        </p>
+        <div class="two-col">
+          <article class="card">
+            <h3>Objetivo geral</h3>
+            <p>
+              Projetar e planejar o desenvolvimento de um ambiente virtual 3D acessível via web que funcione como museu interativo
+              para apresentação de marcos históricos da computação.
+            </p>
+          </article>
+          <article class="card">
+            <h3>Objetivos específicos</h3>
+            <ul>
+              <li>Levantar requisitos funcionais e não-funcionais.</li>
+              <li>Definir arquitetura e tecnologias de hospedagem e renderização.</li>
+              <li>Modelar interações do usuário por meio de diagramas UML.</li>
+              <li>Planejar a interface com foco em navegação fluida e boa experiência de uso.</li>
+            </ul>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="tecnologias">
+      <div class="container">
+        <h2 class="section-title">Arquitetura e tecnologias propostas</h2>
+        <p class="section-subtitle">
+          A stack foi pensada para viabilizar desenvolvimento iterativo, integração web e publicação simplificada.
+        </p>
+        <div class="cards">
+          <article class="card">
+            <h3>Unity</h3>
+            <p>
+              Engine principal para construção do ambiente 3D, controle da navegação, organização das cenas e exportação em WebGL.
+            </p>
+          </article>
+          <article class="card">
+            <h3>C#</h3>
+            <p>
+              Linguagem utilizada para implementar scripts de controle do jogador, interações, gatilhos de interface e lógica do museu.
+            </p>
+          </article>
+          <article class="card">
+            <h3>HTML, CSS e JavaScript</h3>
+            <p>
+              Responsáveis pela página hospedeira, instruções iniciais, identidade visual e integração do canvas WebGL no navegador.
+            </p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="container two-col">
+        <article class="highlight-box">
+          <h2 class="section-title" style="font-size: 1.7rem; margin-bottom: 10px;">Requisitos em destaque</h2>
+          <ul style="padding-left: 20px; color: var(--muted); display: grid; gap: 10px;">
+            <li>Navegação pelo ambiente 3D com teclado e mouse.</li>
+            <li>Exibição de painéis informativos ao interagir com itens do acervo.</li>
+            <li>Seção introdutória com contexto e instruções de uso antes da experiência.</li>
+            <li>Compatibilidade com Chrome, Firefox e Edge.</li>
+            <li>Canvas responsivo para diferentes resoluções.</li>
+            <li>Build WebGL otimizado para carregamento eficiente.</li>
+          </ul>
+        </article>
+
+        <article class="card">
+          <h3>Desafios previstos</h3>
+          <p style="margin-bottom: 12px;">
+            O principal desafio está na otimização do desempenho em navegadores, já que aplicações WebGL possuem restrições de memória e processamento.
+          </p>
+          <ul>
+            <li>Uso de modelos low-poly.</li>
+            <li>Compressão cuidadosa de texturas.</li>
+            <li>Iluminação pré-calculada (baked lighting).</li>
+            <li>Testes contínuos de carregamento e fluidez.</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <section id="cronograma">
+      <div class="container">
+        <h2 class="section-title">Cronograma macro</h2>
+        <p class="section-subtitle">
+          O desenvolvimento está organizado em fases para facilitar acompanhamento, validação e refinamento da solução.
+        </p>
+        <div class="timeline">
+          <div class="timeline-item">
+            <strong>Fase 1</strong>
+            <p>Levantamento de requisitos, modelagem UML e definição do design inicial da interface.</p>
+          </div>
+          <div class="timeline-item">
+            <strong>Fase 2</strong>
+            <p>Estruturação do front-end web e montagem básica do cenário virtual na Unity.</p>
+          </div>
+          <div class="timeline-item">
+            <strong>Fase 3</strong>
+            <p>Programação das interações em C# e integração entre o módulo WebGL e a página web.</p>
+          </div>
+          <div class="timeline-item">
+            <strong>Fase 4</strong>
+            <p>Testes de carregamento, otimização dos assets, ajustes finais e publicação online.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer id="contato">
+    <div class="container footer-box">
+      <div>
+        <strong>Museu Virtual da História da Computação</strong><br />
+        Projeto acadêmico desenvolvido para a disciplina de Análise e Projeto de Sistemas.
+      </div>
+      <div>
+        <strong>Equipe:</strong> Felipe Haiashida Carvalho e Fernando de Freitas<br />
+        <strong>Período:</strong> 2026.1
+      </div>
+    </div>
+  </footer>
+</body>
+</html>
